@@ -21,13 +21,12 @@ type FeedResponse struct {
 
 func BuildFeedResponse(code int, feedList []*model.VideoAuthorBundle, nextTime int64) *FeedResponse {
 	res := &FeedResponse{}
-	if code != CodeSuccess {
-		res.Response = NewResponse(code, CodeFeedMessages[code])
-		return res
-	}
-	res.Response = NewResponse(CodeSuccess, "")
+	res.Response = NewResponse(code, CodeFeedMessages[code])
 	res.NextTime = uint64(nextTime)
 	res.VideoList = make([]*Video, len(feedList))
+	if code != CodeSuccess {
+		return res
+	}
 	for i, feed := range feedList {
 		res.VideoList[i] = BuildVideoResponse(feed)
 	}
